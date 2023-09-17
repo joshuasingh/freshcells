@@ -1,0 +1,30 @@
+.login {
+  display: flex;
+  flex-direction: row;
+  min-width: 100vw;
+  height: 100vh;
+}
+
+.company-adverse {
+  flex: 1;
+  color: white;
+  background-color: #4F709C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.login-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
