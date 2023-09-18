@@ -128,7 +128,7 @@ function Login() {
         </Loader>
       </Dimmer> 
       <div className="company-adverse">
-        Freshcells 
+        Login Into Freshcells 
       </div>
       <div className="login-content">
         {renderLoginForm()}

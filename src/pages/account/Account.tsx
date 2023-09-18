@@ -1,10 +1,11 @@
 import { useEffect, useContext } from "react";
 import { CookiesContext } from '../../utils/context';
 import { UserCookies } from '../../utils/cookie-handler';
-import { Label, Loader, Dimmer, Button } from "semantic-ui-react";
+import { Loader, Dimmer, Button, Input } from "semantic-ui-react";
 import { useLazyQuery } from "@apollo/client";
 import { useLogout } from "../../hooks/logout";
 import USER from "./user_query";
+import './Account.css';
 
 const Account = () => {
   const { cookies } = useContext(CookiesContext);
@@ -16,25 +17,37 @@ const Account = () => {
     getUserDetails({ variables: { userId: cookies[UserCookies.USER_ID] } });
   }, []);
 
-  return (<div>
-     <Dimmer active={loading}>
-      <Loader 
-       active={loading} 
-       size="large"
-      > 
-        fetching User Details....
-      </Loader>
-    </Dimmer>  
-    <h1> User Details</h1>
-    <div>
-     <Label>First Name: </Label>
-     <Label>{fetchedUserDetails?.user?.firstName}</Label>   
+  return ( <div className='accounts-container'>
+    <div className='user-details-container'>
+       <Dimmer active={loading}>
+        <Loader 
+         active={loading} 
+         size="large"
+        > 
+          fetching User Details....
+        </Loader>
+      </Dimmer>  
+      <div className='user-details-row' style={{ "justifyContent": "center" }}>
+        <h1> User Details</h1>    
+      </div>
+      <div className='user-details-row'>
+       <h3>First Name: </h3>
+       <Input 
+         placeholder='.....' 
+         value={fetchedUserDetails?.user?.firstName}
+         disabled
+       />
+      </div>
+      <div className='user-details-row'>
+       <h3>last Name: </h3>
+       <Input 
+         placeholder='.....' 
+         value={fetchedUserDetails?.user?.lastName}
+         disabled
+       />
+      </div>
+      <Button onClick={logout} color='red'>logout</Button>
     </div>
-    <div>
-     <Label>last Name: </Label>
-     <Label>{fetchedUserDetails?.user?.lastName}</Label>   
-    </div>
-    <Button onClick={logout}>logout</Button>
   </div>)  
 }
 

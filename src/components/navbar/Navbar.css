@@ -1,0 +1,12 @@
+.navbar-container {
+  height: 100vh;
+}
+
+.navbar-row {
+  color: white;
+  background-color: #4F709C;
+  display: flex;
+  min-height: 80px;
+  justify-content: center;
+  align-items: center;
+}
