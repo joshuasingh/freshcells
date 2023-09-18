@@ -1,16 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Form, Input, Button, Message } from "semantic-ui-react";
+import { useState, useEffect, useContext } from 'react';
+import { Form, Input, Button, Message, Loader, Dimmer } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import { isValidPassword, isValidEmail } from '../../utils/validation';
+import { UserCookies } from '../../utils/cookie-handler';
+import { CookiesContext } from '../../utils/context';
 import LOGIN from "./login_query";
 import './Login.css';
  
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("test@freshcells.de");
+  const [password, setPassword] = useState("KTKwXm2grV4wHzW");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [orderItemResend] = useMutation(LOGIN);
+  const navigate = useNavigate();
+  const { setCookie } = useContext(CookiesContext);
+
   let loginErrorhandle: any;
 
   useEffect(() => {
@@ -20,9 +28,9 @@ function Login() {
   }, [loginErrorhandle])
 
   const validateDetails = () => {
-    let validRegex = (/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/);
     let hasError = false;
-    if (email.length === 0 || !email.match(validRegex)) {
+
+    if (isValidEmail(email)) {
       setEmailError("Please enter a valid email address");
       hasError = true;
     }
@@ -30,37 +38,45 @@ function Login() {
       setEmailError("");  
     }
 
-    if (password.length === 0) {
+    if (isValidPassword(password)) {
       setPasswordError("Please enter a valid password");
       hasError = true;
     }
     else {
       setPasswordError("");   
     }
-     
+
     if (!hasError) loginUser();
     return;
   }
 
   const handleLoginError = () => {
     loginErrorhandle = setTimeout(() => {
-        setLoginError(false);
+      setLoginError(false);
     }, 7000);
     setLoginError(true);
   }
 
+  const onSuccessfullLogin = (token: string) => {
+    setCookie(UserCookies.USER as never, token);
+    navigate("account");
+  }
+
   const loginUser = async () => {
     try {
+      setLoading(true);
       const { errors, data }  = await orderItemResend({ variables: { input: { identifier: email, password: password } } });
-  
-      if (errors) {
-        handleLoginError();
+      setLoading(false);
+
+      if (data?.login?.jwt) {
+        onSuccessfullLogin(data.login.jwt);
       }
-      else if (data) {
-        console.log('sdfdsf', data);
+      else {
+        handleLoginError();
       }
     } catch (e) {
-        handleLoginError();
+      handleLoginError();
+      setLoading(false);
     }
   }
 
@@ -96,7 +112,7 @@ function Login() {
       { loginError && 
         <Message
           error
-          header='Some Went Wrong'
+          header='Something Went Wrong'
           content='Unable to login. Please verify your credential and try again.'
         />
       }
@@ -111,12 +127,20 @@ function Login() {
   }
   return (
     <div className="login">
-        <div className="company-adverse">
-          Freshcells 
-        </div>
-        <div className="login-content">
-          {renderLoginForm()}
-        </div>
+      <Dimmer active={loading}>
+        <Loader 
+         active={loading} 
+         size="large"
+        > 
+          logging you in.....
+        </Loader>
+      </Dimmer> 
+      <div className="company-adverse">
+        Freshcells 
+      </div>
+      <div className="login-content">
+        {renderLoginForm()}
+      </div>
     </div>
   );
 }
