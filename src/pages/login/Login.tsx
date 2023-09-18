@@ -1,10 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Input, Button, Message, Loader, Dimmer } from "semantic-ui-react";
 import { useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
 import { isValidPassword, isValidEmail } from '../../utils/validation';
-import { UserCookies } from '../../utils/cookie-handler';
-import { CookiesContext } from '../../utils/context';
+import { useLogin } from '../../hooks/login';
 import LOGIN from "./login_query";
 import './Login.css';
  
@@ -15,9 +13,8 @@ function Login() {
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [orderItemResend] = useMutation(LOGIN);
-  const navigate = useNavigate();
-  const { setCookie } = useContext(CookiesContext);
+  const [loginUserDets] = useMutation(LOGIN);
+  const [ login ] = useLogin();
 
   let loginErrorhandle: any;
 
@@ -57,19 +54,14 @@ function Login() {
     setLoginError(true);
   }
 
-  const onSuccessfullLogin = (token: string) => {
-    setCookie(UserCookies.USER as never, token);
-    navigate("account");
-  }
-
   const loginUser = async () => {
     try {
       setLoading(true);
-      const { errors, data }  = await orderItemResend({ variables: { input: { identifier: email, password: password } } });
+      const { data }  = await loginUserDets({ variables: { input: { identifier: email, password: password } } });
       setLoading(false);
 
       if (data?.login?.jwt) {
-        onSuccessfullLogin(data.login.jwt);
+        login(data.login.jwt, data.login?.user?.id)
       }
       else {
         handleLoginError();

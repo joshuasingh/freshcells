@@ -1,8 +1,6 @@
-import Login from "./pages/login/Login";
-import Account from "./pages/account/Account";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { CookiesContext } from "./utils/context";
+import AppRoutes from "./AppRoutes";
 import './App.css';
 
 function App() {
@@ -12,12 +10,7 @@ function App() {
     <div className="App">
       <CookiesContext.Provider value={{ cookies, setCookie, removeCookie }}>
         <CookiesProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/account" element={<Account />} />
-            </Routes>
-          </BrowserRouter>
+          <AppRoutes />
         </CookiesProvider>
       </CookiesContext.Provider>
     </div>
