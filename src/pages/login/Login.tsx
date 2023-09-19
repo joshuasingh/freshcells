@@ -7,8 +7,8 @@ import LOGIN from "./login_query";
 import './Login.css';
  
 function Login() {
-  const [email, setEmail] = useState("test@freshcells.de");
-  const [password, setPassword] = useState("KTKwXm2grV4wHzW");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState(false);
@@ -73,8 +73,8 @@ function Login() {
   }
 
   const renderLoginForm = () => {
-    return (<Form size="big" className="login-form" error>
-      <Form.Field
+    return (<Form size="big" className="login-form" error role='login-form'>
+      <Form.Input
         id="form-input-control-error-email"
         value={email}
         control={Input}

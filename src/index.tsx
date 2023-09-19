@@ -2,25 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import {
-  ApolloProvider,
-  ApolloClient,
-  createHttpLink,
-  InMemoryCache
-} from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
+import { client } from './utils/apollo-utils';
 
-const httpLink = createHttpLink({
-  uri: 'https://cms.trial-task.k8s.ext.fcse.io/graphql'
-});
+const element = document.getElementById('root') as HTMLElement;
+const root = ReactDOM.createRoot(element);
 
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache()
-});
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>

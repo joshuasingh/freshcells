@@ -7,7 +7,7 @@ function App() {
   const [cookies, setCookie, removeCookie] = useCookies([]);
 
   return (
-    <div className="App">
+    <div className="App" data-testid="app-root">
       <CookiesContext.Provider value={{ cookies, setCookie, removeCookie }}>
         <CookiesProvider>
           <AppRoutes />

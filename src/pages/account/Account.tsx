@@ -17,7 +17,7 @@ const Account = () => {
     getUserDetails({ variables: { userId: cookies[UserCookies.USER_ID] } });
   }, []);
 
-  return ( <div className='accounts-container'>
+  return ( <div className='accounts-container' role={'contentinfo'}>
     <div className='user-details-container'>
        <Dimmer active={loading}>
         <Loader 
